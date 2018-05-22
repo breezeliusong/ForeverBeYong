@@ -8,7 +8,7 @@
     Loaded="Page_Loaded"
     mc:Ignorable="d">
 
-    <Grid Background="{StaticResource PageBackground}">
+    <Grid>
         <GridView Name="GdView">
             <GridView.ItemTemplate>
                 <DataTemplate>

@@ -9,10 +9,10 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <NavigationView Name="NavgtView" Header="{x:Bind ((NavigationViewItem)NavgtView.SelectedItem).Content, Mode=OneWay}"
-                        Background="{StaticResource PageBackground}" IsSettingsVisible="False"
+                        IsSettingsVisible="False"
                         OpenPaneLength="130"  ItemInvoked="NavgtView_ItemInvoked" 
                         SelectionChanged="NavgtView_SelectionChanged">
-            <NavigationView.MenuItems >
+            <NavigationView.MenuItems>
                 <NavigationViewItem Margin="0,10,0,0" Content="Home" Icon="Home"/>
                 <NavigationViewItem Margin="0,10,0,0" Content="Photo">
                     <NavigationViewItem.Icon>
@@ -27,6 +27,11 @@
                 <NavigationViewItem Margin="0,10,0,0" Content="Video">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE714;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Margin="0,10,0,0" Content=" Map ">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE122;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>

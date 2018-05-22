@@ -5,10 +5,10 @@
     xmlns:local="using:ForeverBeYoung"
     RequestedTheme="Light">
     <Application.Resources>
-        <AcrylicBrush x:Key="NavigationViewDefaultPaneBackground"
+        <!--<AcrylicBrush x:Key="NavigationViewDefaultPaneBackground"
               BackgroundSource="Backdrop" TintColor="Orange"/>
         <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground"
-             Color="Orange"/>
+             Color="Orange"/>-->
 
         <LinearGradientBrush x:Key="PageBackground" StartPoint="0,0" EndPoint="1,1">
             <GradientStop Color="Orange" Offset="0.25"/>
