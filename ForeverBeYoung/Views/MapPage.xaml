@@ -5,11 +5,26 @@
     xmlns:local="using:ForeverBeYoung.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-      Loaded="Page_Loaded"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Loaded="Page_Loaded"
+    mc:Ignorable="d">
+    <Page.Resources>
+    </Page.Resources>
 
     <Grid>
-        <map:MapControl Name="mapControl" MapServiceToken="Am316br2wIjxf0Q24UNla1uXzpDJdVbRPFLcD-vnSRyB7uN4BdkuSziKw8aXTYgn" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="10">
+            <TextBlock Text="From" Margin="5"/>
+            <AutoSuggestBox Name="FromASB" PlaceholderText="Start position" Width="400" QueryIcon="Find" TextChanged="FromASB_TextChanged">
+            </AutoSuggestBox>
+            <TextBlock Text="To" Margin="5"/>
+            <AutoSuggestBox Name="ToASB" PlaceholderText="End Position" Width="400" QueryIcon="Find" TextChanged="ToASB_TextChanged"/>
+            <Button Content="Find Routes" Click="FindRoutesAsync"/>
+        </StackPanel>
+        <map:MapControl Name="mapControl"
+                        Grid.Row="1"
+                        MapServiceToken="nVdqQ5EDpq6oB195utHS~Ka5KXfi8cTkBNz3VUoJBqQ~AmQIdYOg9DWy0wgcrSj78pqlTg1hcB2yTi0QpZGpV9Ynt1hv3YTxTe34OmdLkNPP"/>
     </Grid>
 </Page>

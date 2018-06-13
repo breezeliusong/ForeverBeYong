@@ -58,6 +58,9 @@ namespace ForeverBeYoung
                 case "Video":
                     ContentFrame.Navigate(typeof(VideoPage));
                     break;
+                case "Map":
+                    ContentFrame.Navigate(typeof(MapPage));
+                    break;
             }
         }
 
@@ -77,6 +80,9 @@ namespace ForeverBeYoung
                     break;
                 case "Video":
                     ContentFrame.Navigate(typeof(VideoPage));
+                    break;
+                case "Map":
+                    ContentFrame.Navigate(typeof(MapPage));
                     break;
             }
 

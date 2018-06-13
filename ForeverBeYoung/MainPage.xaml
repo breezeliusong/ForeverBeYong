@@ -29,7 +29,7 @@
                         <FontIcon Glyph="&#xE714;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Margin="0,10,0,0" Content=" Map ">
+                <NavigationViewItem Margin="0,10,0,0" Content="Map">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE122;"/>
                     </NavigationViewItem.Icon>
