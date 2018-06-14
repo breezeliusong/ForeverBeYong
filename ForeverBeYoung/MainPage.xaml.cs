@@ -33,7 +33,7 @@ namespace ForeverBeYoung
         {
             foreach (NavigationViewItemBase item in NavgtView.MenuItems)
             {
-                if (item is NavigationViewItem && item.Content.ToString() == "Home")
+                if (item is NavigationViewItem && item.Content.ToString() == "Map")
                 {
                     NavgtView.SelectedItem = item;
                     break;

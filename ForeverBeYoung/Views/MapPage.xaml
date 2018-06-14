@@ -17,10 +17,10 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="10">
             <TextBlock Text="From" Margin="5"/>
-            <AutoSuggestBox Name="FromASB" PlaceholderText="Start position" Width="400" QueryIcon="Find" TextChanged="FromASB_TextChanged">
+            <AutoSuggestBox Name="FromASB" PlaceholderText="Start position" Width="400" QueryIcon="Find" TextChanged="FromASB_TextChanged" QuerySubmitted="FromASB_QuerySubmitted">
             </AutoSuggestBox>
             <TextBlock Text="To" Margin="5"/>
-            <AutoSuggestBox Name="ToASB" PlaceholderText="End Position" Width="400" QueryIcon="Find" TextChanged="ToASB_TextChanged"/>
+            <AutoSuggestBox Name="ToASB" PlaceholderText="End Position" Width="400" QueryIcon="Find" TextChanged="ToASB_TextChanged" QuerySubmitted="ToASB_QuerySubmitted"/>
             <Button Content="Find Routes" Click="FindRoutesAsync"/>
         </StackPanel>
         <map:MapControl Name="mapControl"

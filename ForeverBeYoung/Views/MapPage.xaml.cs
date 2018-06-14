@@ -1,6 +1,7 @@
 ﻿using ForeverBeYoung.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -31,10 +32,15 @@ namespace ForeverBeYoung.Views
         private MapHelper mapHelper;
         private Geolocator geolocator;
         private Geopoint geopoint;
+        private ObservableCollection<Geopoint> fromGeopoints, toGeopoints;
+        private List<MapLocation> fromLocations, toLocations;
         public MapPage()
         {
             this.InitializeComponent();
             mapHelper = new MapHelper();
+            fromGeopoints = new ObservableCollection<Geopoint>();
+            toGeopoints = new ObservableCollection<Geopoint>();
+
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -44,34 +50,13 @@ namespace ForeverBeYoung.Views
             {
                 case GeolocationAccessStatus.Allowed:
 
-                    geolocator = new Geolocator { DesiredAccuracyInMeters = 0, DesiredAccuracy = PositionAccuracy.Default };
+                    geolocator = new Geolocator { DesiredAccuracyInMeters = 0, DesiredAccuracy = PositionAccuracy.High };
                     geolocator.StatusChanged += Geolocator_StatusChanged;
                     geolocator.PositionChanged += Geolocator_PositionChanged;
 
                     Geoposition geoposition = await geolocator.GetGeopositionAsync();
                     geopoint = geoposition.Coordinate.Point;
-                    MapIcon LocationIcon = new MapIcon()
-                    {
-                        Location = geopoint,
-                        CollisionBehaviorDesired = MapElementCollisionBehavior.RemainVisible,
-                        //Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/Icon.png")),
-                        Title = "I am here",
-                        NormalizedAnchorPoint = new Point(0.5, 1.0)
-                    };
-                    var Icons = new List<MapElement>();
-                    Icons.Add(LocationIcon);
-                    MapElementsLayer mapLayer = new MapElementsLayer()
-                    {
-                        ZIndex = 1,
-                        MapElements = Icons
-                    };
-
-                    mapControl.Layers.Add(mapLayer);
-                    mapControl.Center = geopoint;
-                    mapControl.ZoomLevel = 16;
-
-
-
+                    mapHelper.AddMapIcon(geopoint, mapControl, "I am here");
                     break;
 
                 case GeolocationAccessStatus.Denied:
@@ -89,31 +74,52 @@ namespace ForeverBeYoung.Views
 
         private void Geolocator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-
+            //TODO
         }
 
         private void Geolocator_StatusChanged(Geolocator sender, StatusChangedEventArgs args)
         {
-
+            //TODO
         }
 
         private async void FromASB_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var Locations = await mapHelper.FindGecodeAsync(sender.Text, geopoint);
-                if (Locations != null)
+                fromLocations = await mapHelper.FindGecodeAsync(sender.Text, geopoint);
+                if (fromLocations != null)
                 {
-                    sender.ItemsSource = Locations;
+                    var Towns = new ObservableCollection<string>();
+                    foreach (var location in fromLocations)
+                    {
+                        Towns.Add(location.Address.Town);
+                        fromGeopoints.Add(location.Point);
+                    }
+                    sender.ItemsSource = Towns;
                 }
                 else
-                sender.ItemsSource = new string[] { "No results found" };
+                    sender.ItemsSource = new string[] { "No results found" };
             }
         }
 
-        private void ToASB_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        private async void ToASB_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                toLocations = await mapHelper.FindGecodeAsync(sender.Text, geopoint);
+                if (toLocations != null)
+                {
+                    var Towns = new ObservableCollection<string>();
+                    foreach (var location in toLocations)
+                    {
+                        Towns.Add(location.Address.Town);
+                        toGeopoints.Add(location.Point);
+                    }
+                    sender.ItemsSource = Towns;
+                }
+                else
+                    sender.ItemsSource = new string[] { "No results found" };
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -124,6 +130,70 @@ namespace ForeverBeYoung.Views
         private void FindRoutesAsync(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void FromASB_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (args.ChosenSuggestion != null)
+            {
+                foreach (var location in fromLocations)
+                {
+                    if (location.Address.Town == args.ChosenSuggestion.ToString())
+                    {
+                        mapHelper.AddMapIcon(location.Point, mapControl, location.Address.Town+">>>>From here?");
+                    }
+                    else
+                    {
+                        //TODO
+                    }
+                }
+            }
+            else
+            {
+                if (FromASB.Text == null)
+                {
+                    mapHelper.AddMapIcon(geopoint, mapControl, "I am here");
+                }
+                else
+                {
+                    foreach (var location in fromLocations)
+                    {
+                        mapHelper.AddMapIcon(location.Point, mapControl, location.Address.Town +">>>>From here?");
+                    }
+                }
+            }
+        }
+
+        private void ToASB_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (args.ChosenSuggestion != null)
+            {
+                foreach (var location in toLocations)
+                {
+                    if (location.Address.Town == args.ChosenSuggestion.ToString())
+                    {
+                        mapHelper.AddMapIcon(location.Point, mapControl, location.Address.Town);
+                    }
+                    else
+                    {
+                        //TODO
+                    }
+                }
+            }
+            else
+            {
+                if (ToASB.Text == null)
+                {
+                    mapHelper.AddMapIcon(geopoint, mapControl, "I am here");
+                }
+                else
+                {
+                    foreach (var location in toLocations)
+                    {
+                        mapHelper.AddMapIcon(location.Point, mapControl, location.Address.Town);
+                    }
+                }
+            }
         }
     }
 }
