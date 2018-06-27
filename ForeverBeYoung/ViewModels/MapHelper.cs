@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Services.Maps;
+using Windows.Storage.Streams;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -59,14 +61,28 @@ namespace ForeverBeYoung.ViewModels
                 MapElements = Icons,
             };
             mapLayer.MapElementPointerEntered += MapLayer_MapElementPointerEntered;
+            mapLayer.MapElementPointerExited += MapLayer_MapElementPointerExited;
             mapControl.Layers.Add(mapLayer);
             mapControl.Center = geopoint;
             mapControl.ZoomLevel = 16;
         }
 
+        private void MapLayer_MapElementPointerExited(MapElementsLayer sender, MapElementsLayerPointerExitedEventArgs args)
+        {
+            var mapIcon = args.MapElement as MapIcon;
+            mapIcon.Title = "I am here";
+        }
+
+        private async void GetRoutesAsync(Geopoint startPoint, Geopoint endPoint)
+        {
+            
+        }
+
         private void MapLayer_MapElementPointerEntered(MapElementsLayer sender, MapElementsLayerPointerEnteredEventArgs args)
         {
-            //TODO
+            var mapIcon= args.MapElement as MapIcon;
+            mapIcon.Title = "You point here";
+            //mapIcon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/Icon.png"));
         }
     }
 }

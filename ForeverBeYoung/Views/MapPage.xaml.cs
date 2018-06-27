@@ -10,6 +10,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Services.Maps;
 using Windows.Storage.Streams;
+using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -31,7 +32,7 @@ namespace ForeverBeYoung.Views
     {
         private MapHelper mapHelper;
         private Geolocator geolocator;
-        private Geopoint geopoint;
+        private Geopoint geopoint, fromGeopoint, toGeopoint;
         private ObservableCollection<Geopoint> fromGeopoints, toGeopoints;
         private List<MapLocation> fromLocations, toLocations;
         public MapPage()
@@ -122,13 +123,39 @@ namespace ForeverBeYoung.Views
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
 
-        }
-
-        private void FindRoutesAsync(object sender, RoutedEventArgs e)
+        private async void FindRoutesAsync(object sender, RoutedEventArgs e)
         {
+            if (ToASB.Text == string.Empty)
+            {
+                await new MessageDialog("Please enter the destination").ShowAsync();
+            }
+            if (FromASB.Text == string.Empty)
+            {
+                fromGeopoint = geopoint;
+            }
+            MapRouteFinderResult routeFinderResults = await MapRouteFinder.GetDrivingRouteAsync(fromGeopoint, toGeopoint, MapRouteOptimization.TimeWithTraffic, MapRouteRestrictions.None);
+            if (routeFinderResults.Status == MapRouteFinderStatus.Success)
+            {
+                // Use the route to initialize a MapRouteView.
+                MapRouteView viewOfRoute = new MapRouteView(routeFinderResults.Route);
+                viewOfRoute.RouteColor = Colors.Yellow;
+                viewOfRoute.OutlineColor = Colors.Black;
+
+                // Add the new MapRouteView to the Routes collection
+                // of the MapControl.
+                mapControl.Routes.Add(viewOfRoute);
+
+                // Fit the MapControl to the route.
+                await mapControl.TrySetViewBoundsAsync(
+                      routeFinderResults.Route.BoundingBox,
+                      null,
+                      Windows.UI.Xaml.Controls.Maps.MapAnimationKind.None);
+            }
+            else
+            {
+                await new MessageDialog("No route found").ShowAsync();
+            }
 
         }
 
@@ -140,6 +167,7 @@ namespace ForeverBeYoung.Views
                 {
                     if (location.Address.Town == args.ChosenSuggestion.ToString())
                     {
+                        fromGeopoint = location.Point;
                         mapHelper.AddMapIcon(location.Point, mapControl, location.Address.Town+">>>>From here?");
                     }
                     else
@@ -172,6 +200,7 @@ namespace ForeverBeYoung.Views
                 {
                     if (location.Address.Town == args.ChosenSuggestion.ToString())
                     {
+                        toGeopoint = location.Point;
                         mapHelper.AddMapIcon(location.Point, mapControl, location.Address.Town);
                     }
                     else
