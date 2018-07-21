@@ -5,13 +5,14 @@
     xmlns:local="using:ForeverBeYoung"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Name="MyPage"
     mc:Ignorable="d">
+    
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <NavigationView Name="NavgtView" Header="{x:Bind ((NavigationViewItem)NavgtView.SelectedItem).Content, Mode=OneWay}"
                         IsSettingsVisible="False"
-                        OpenPaneLength="130"  ItemInvoked="NavgtView_ItemInvoked" 
-                        SelectionChanged="NavgtView_SelectionChanged">
+                        OpenPaneLength="130"  ItemInvoked="NavgtView_ItemInvoked" SelectionChanged="NavgtView_SelectionChanged" >
             <NavigationView.MenuItems>
                 <NavigationViewItem Margin="0,10,0,0" Content="Home" Icon="Home"/>
                 <NavigationViewItem Margin="0,10,0,0" Content="Photo">
@@ -37,9 +38,9 @@
             </NavigationView.MenuItems>
             <NavigationView.HeaderTemplate>
                 <DataTemplate x:DataType="x:String">
-                    <!--<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">-->
-                        <TextBlock Text="{x:Bind}" Margin="20,0,30,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" Name="TBHeader"/>
-                    <!--</StackPanel>-->
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock Text="{x:Bind}" Margin="20,0,30,0" VerticalAlignment="Center"  HorizontalAlignment="Stretch"  FontSize="18" Name="TBHeader"/>
+                    </StackPanel>
                 </DataTemplate>
             </NavigationView.HeaderTemplate>
 

@@ -32,17 +32,36 @@ namespace ForeverBeYoung.Views
         {
             this.InitializeComponent();
         }
-
+        bool IsBackFromPhotoDetailedPage;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            if(e.Parameter is PhotoModel)
+            {
+                IsBackFromPhotoDetailedPage = true;
+                GdView.ItemsSource = PageModel;
+                GdView.SelectedItem = e.Parameter;
+            }
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            if (IsBackFromPhotoDetailedPage)
+            {
+                return;
+            }
             var files = await FileHelper.GetFilesAsync();
             ObservableCollection<PhotoModel> collection = await FileHelper.CreatePhotoModel(files);
             GdView.ItemsSource = collection;
+            PageModel = collection;
+        }
+
+        private static ObservableCollection<PhotoModel> PageModel;
+
+        private void GdView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Frame frame= Window.Current.Content as Frame;
+            frame.Navigate(typeof(PhotoDetailPage),e.ClickedItem);
         }
     }
 

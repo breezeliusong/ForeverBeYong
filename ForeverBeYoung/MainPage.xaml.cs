@@ -1,6 +1,8 @@
-﻿using ForeverBeYoung.Views;
+﻿using ForeverBeYoung.Models;
+using ForeverBeYoung.Views;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -28,12 +30,30 @@ namespace ForeverBeYoung
             this.InitializeComponent();
             this.Loaded += MainPage_Loaded;
         }
+        bool IsFromBack;
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if(e.Parameter is PhotoModel)
+            {
+                IsFromBack = true;
+                photoModel = e.Parameter as PhotoModel;
+                NavgtView.SelectedItem = NavgtView.MenuItems[1];
+            }
+        }
+
+        PhotoModel photoModel;
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
+            if (IsFromBack)
+            {
+                return;
+            }
             foreach (NavigationViewItemBase item in NavgtView.MenuItems)
             {
-                if (item is NavigationViewItem && item.Content.ToString() == "Map")
+                if (item is NavigationViewItem && item.Content.ToString() == "Home")
                 {
                     NavgtView.SelectedItem = item;
                     break;
@@ -64,6 +84,8 @@ namespace ForeverBeYoung
             }
         }
 
+
+
         private void NavgtView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             NavigationViewItem item = args.SelectedItem as NavigationViewItem;
@@ -73,7 +95,7 @@ namespace ForeverBeYoung
                     ContentFrame.Navigate(typeof(HomePage));
                     break;
                 case "Photo":
-                    ContentFrame.Navigate(typeof(PhotoPage));
+                    ContentFrame.Navigate(typeof(PhotoPage), photoModel);
                     break;
                 case "Music":
                     ContentFrame.Navigate(typeof(MusicPage));
@@ -87,6 +109,5 @@ namespace ForeverBeYoung
             }
 
         }
-
     }
 }

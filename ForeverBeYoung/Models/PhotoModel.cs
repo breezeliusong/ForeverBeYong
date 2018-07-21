@@ -12,5 +12,6 @@ namespace ForeverBeYoung.Models
         public BitmapImage ImaSource { get; set; }
         public string ImageInfo { get; set; }
         public string DateTime { get; set; }
+        public BitmapImage OriginalImage { get; set; }
     }
 }
